@@ -15,6 +15,7 @@ SOURCES += \
 
 HEADERS += \
     GenerosMusicales.h \
+    InvalidRateException.h \
     ctunes.h \
     mainwindow.h
 

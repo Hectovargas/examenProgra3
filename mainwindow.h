@@ -41,6 +41,16 @@ private slots:
 
     void on_pushButton_9_pressed();
 
+    void on_addboton_clicked();
+
+    void on_verboton_clicked();
+
+    void on_botonreview_clicked();
+
+    void on_descargarboton_clicked();
+
+    void on_creararchivosboton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

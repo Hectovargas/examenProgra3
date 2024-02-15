@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <GenerosMusicales.h>
+#include <qfile.h>
 
 using namespace std;
 
@@ -16,12 +17,14 @@ public:
     int getcodigo(long);
     void addSong(string, string, GenerosMusicales::Genero ,double);
     void reviewSong(int, int);
-    void downloadSong(int , string );
-    void songs(string);
-    void infoSong(int);
-    fstream codigoarchivo;
-    fstream downloadarchivo;
-    fstream songsarchivo;
+    string downloadSong(int , string );
+    QString songs(string);
+    string infoSong(int);
+
+private:
+    int codecancion = 1;
+    int codedownload = 1;
 };
+
 
 #endif // CTUNES_H

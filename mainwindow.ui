@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label">
@@ -294,6 +294,19 @@
        <string>Add Song </string>
       </property>
      </widget>
+     <widget class="QLabel" name="etiquetaerror">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>170</y>
+        <width>231</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_3">
      <widget class="QPushButton" name="pushButton_6">
@@ -428,7 +441,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>150</y>
+        <y>110</y>
         <width>251</width>
         <height>51</height>
        </rect>
@@ -443,8 +456,8 @@
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>240</y>
+        <x>140</x>
+        <y>170</y>
         <width>251</width>
         <height>51</height>
        </rect>
@@ -459,8 +472,8 @@
      <widget class="QLineEdit" name="codigoDescargar">
       <property name="geometry">
        <rect>
-        <x>400</x>
-        <y>160</y>
+        <x>430</x>
+        <y>120</y>
         <width>161</width>
         <height>31</height>
        </rect>
@@ -469,9 +482,9 @@
      <widget class="QLineEdit" name="nombredownload">
       <property name="geometry">
        <rect>
-        <x>400</x>
-        <y>250</y>
-        <width>161</width>
+        <x>380</x>
+        <y>180</y>
+        <width>181</width>
         <height>31</height>
        </rect>
       </property>
@@ -479,8 +492,8 @@
      <widget class="QPushButton" name="descargarboton">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>380</y>
+        <x>290</x>
+        <y>370</y>
         <width>181</width>
         <height>61</height>
        </rect>
@@ -490,6 +503,29 @@
       </property>
       <property name="text">
        <string>Descargar</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>250</y>
+        <width>0</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>260</y>
+        <width>551</width>
+        <height>51</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -526,8 +562,8 @@
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>200</y>
+        <x>80</x>
+        <y>110</y>
         <width>291</width>
         <height>51</height>
        </rect>
@@ -542,8 +578,8 @@
      <widget class="QLineEdit" name="nombrearchivo">
       <property name="geometry">
        <rect>
-        <x>420</x>
-        <y>210</y>
+        <x>120</x>
+        <y>170</y>
         <width>211</width>
         <height>31</height>
        </rect>
@@ -552,8 +588,8 @@
      <widget class="QPushButton" name="creararchivosboton">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>360</y>
+        <x>100</x>
+        <y>220</y>
         <width>241</width>
         <height>41</height>
        </rect>
@@ -562,7 +598,17 @@
        <string notr="true">font: 22pt &quot;Arial Rounded MT Bold&quot;;</string>
       </property>
       <property name="text">
-       <string>Crear Archivos</string>
+       <string>Crear Archivo</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_2">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>110</y>
+        <width>381</width>
+        <height>321</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -599,8 +645,8 @@
      <widget class="QLabel" name="label_16">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>170</y>
+        <x>50</x>
+        <y>90</y>
         <width>141</width>
         <height>51</height>
        </rect>
@@ -615,8 +661,8 @@
      <widget class="QLineEdit" name="codigoInfo">
       <property name="geometry">
        <rect>
-        <x>350</x>
-        <y>180</y>
+        <x>180</x>
+        <y>100</y>
         <width>171</width>
         <height>31</height>
        </rect>
@@ -625,8 +671,8 @@
      <widget class="QPushButton" name="verboton">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>320</y>
+        <x>110</x>
+        <y>180</y>
         <width>181</width>
         <height>41</height>
        </rect>
@@ -638,6 +684,16 @@
        <string>Ver</string>
       </property>
      </widget>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>90</y>
+        <width>391</width>
+        <height>351</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -647,7 +703,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
