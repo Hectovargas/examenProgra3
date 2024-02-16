@@ -20,6 +20,7 @@ struct cancion{
     double precio;
     int estrellas;
     int reviews;
+    int duracion;
 };
 
 struct descarga
@@ -63,10 +64,15 @@ int ctunes::getcodigo(long offset){
         codigoarchivo.seek(offset);
         int suma = tempcodesong+1;
         in << suma;
+        if(offset==0){
+            codigosaves=tempcodesong;
+        }
         return tempcodesong;
+
 }
 
-void ctunes::addSong(string nombre, string cantante, GenerosMusicales::Genero generoCantante, double precio){
+
+void ctunes::addSong(string nombre, string cantante, GenerosMusicales::Genero generoCantante, double precio, int duracion){
 
     string genero;
     switch (generoCantante) {
@@ -101,7 +107,8 @@ void ctunes::addSong(string nombre, string cantante, GenerosMusicales::Genero ge
     nuevacancion.precio=precio;
     nuevacancion.reviews=0;
     nuevacancion.estrellas=0;
-    insongs << nuevacancion.code << nuevacancion.nombre << nuevacancion.cantante << nuevacancion.genero << nuevacancion.precio << nuevacancion.reviews << nuevacancion.estrellas;
+    nuevacancion.duracion = duracion;
+    insongs << nuevacancion.code << nuevacancion.nombre << nuevacancion.cantante << nuevacancion.genero << nuevacancion.precio << nuevacancion.reviews << nuevacancion.estrellas <<nuevacancion.duracion;
 
 }
 string ctunes::downloadSong(int codeSong, string cliente){
@@ -110,7 +117,7 @@ string ctunes::downloadSong(int codeSong, string cliente){
     while (!songsarchivo.atEnd()) {
         qDebug() << "entre1";
         cancion nuevacancion;
-        insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas;
+        insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas >> nuevacancion.duracion;
         if (nuevacancion.code == codeSong) {
 
             qDebug() << "entre2";
@@ -127,6 +134,7 @@ string ctunes::downloadSong(int codeSong, string cliente){
             downloadin << nuevadecarga.codedown << QString::fromStdString(nuevadecarga.fecha.toStdString())<< nuevadecarga.codesong << nuevadecarga.cliente << nuevadecarga.precio;
 
             return "GRACIAS " + nuevadecarga.cliente.toStdString()+ " por bajar " + nuevacancion.nombre.toStdString() +" a un costo de Lps. " + QString::number(nuevadecarga.precio).toStdString();
+            break;
         }
 
     }
@@ -143,12 +151,15 @@ QString ctunes::songs(string txtFile){
     songsarchivo.seek(0);
       while (!songsarchivo.atEnd()) {
         cancion nuevacancion;
-        insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas;
+          insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas >> nuevacancion.duracion;
         file.seek(file.size());
-        out << "|codigo:  " << nuevacancion.code << " | Nombre: " << nuevacancion.nombre << " | cantante: "<< nuevacancion.cantante << " | genero musical: "<< nuevacancion.genero << " | Precio de la cancion: " << nuevacancion.precio << " | cantidad de reviews: " << nuevacancion.reviews << " | estrellas: " << nuevacancion.estrellas << "|\n\n\n";
+          if(nuevacancion.reviews!=0){
+          out << "|codigo:  " << nuevacancion.code << " | Nombre: " << nuevacancion.nombre << " | cantante: "<< nuevacancion.cantante << " | genero musical: "<< nuevacancion.genero << " | Precio de la cancion: " << nuevacancion.precio << "|TIEMPO: " << QString::number(nuevacancion.duracion/3600)<<":"<<QString::number(((nuevacancion.duracion%3600)/60))<<":"<<QString::number((nuevacancion.duracion%60))<< " | Rating: " << QString::number((nuevacancion.estrellas/nuevacancion.reviews))<< "|\n\n\n";
+          }else{
+          out << "|codigo:  " << nuevacancion.code << " | Nombre: " << nuevacancion.nombre << " | cantante: "<< nuevacancion.cantante << " | genero musical: "<< nuevacancion.genero << " | Precio de la cancion: " << nuevacancion.precio << "|TIEMPO: " << QString::number(nuevacancion.duracion/3600)<<":"<<QString::number(((nuevacancion.duracion%3600)/60))<<":"<<QString::number((nuevacancion.duracion%60))<< " | Rating: " << QString::number(nuevacancion.estrellas)<< "|\n\n\n";
+          }
     }
       file.close();
-
       file.open(QIODevice::ReadOnly);
       file.seek(0);
       QString text = out.readAll();
@@ -162,7 +173,7 @@ string ctunes::infoSong(int codeSong) {
     string textoconcatenado;
     while (!songsarchivo.atEnd()) {
     cancion nuevacancion;
-    insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas;
+        insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas >> nuevacancion.duracion;
         if (nuevacancion.code == codeSong) {
             downloadarchivo.seek(0);
          while (!downloadarchivo.atEnd()) {
@@ -170,27 +181,36 @@ string ctunes::infoSong(int codeSong) {
         downloadin >> nuevadecarga.codedown >> nuevadecarga.fecha >> nuevadecarga.codesong >> nuevadecarga.cliente >> nuevadecarga.precio;
         if(codeSong==nuevadecarga.codesong){
             numerodescargas+=1;
+
             textoconcatenado = textoconcatenado+"\n--------------------------------\nCodigo de descarga: " + QString::number(nuevadecarga.codedown).toStdString() + "\nfecha de descarga: " + nuevadecarga.fecha.toStdString()+ "\nCodigo de la cancion: "+QString::number(nuevadecarga.codesong).toStdString()+"\nNombre Cliente: "+nuevadecarga.cliente.toStdString()+ "\nPrecio de compra: "+QString::number(nuevadecarga.precio).toStdString();
         }
         }
-         return "Codigo: " + QString::number(nuevacancion.code).toStdString() + "\nCancion: " + nuevacancion.nombre.toStdString() + "\ncantante: " + nuevacancion.cantante.toStdString() + "\nGenero: " + nuevacancion.genero.toStdString() + "\nPrecio: " +QString::number(nuevacancion.precio).toStdString() + "\nreviews: "+QString::number(nuevacancion.reviews).toStdString()+ "\nEstrellas: "+QString::number(nuevacancion.estrellas).toStdString()+"\nNumero de descargas: "+ QString::number(numerodescargas).toStdString()+ textoconcatenado;
-        }
-    }
+         if(nuevacancion.reviews!=0){
+         double ratin =nuevacancion.estrellas/nuevacancion.reviews;
+         return "Codigo: " + QString::number(nuevacancion.code).toStdString() + "\nCancion: " + nuevacancion.nombre.toStdString() + "\ncantante: " + nuevacancion.cantante.toStdString() + "\nGenero: " + nuevacancion.genero.toStdString() + "\nPrecio: " +QString::number(nuevacancion.precio).toStdString() + "\nreviews: "+QString::number(nuevacancion.reviews).toStdString()+ "\nEstrellas: "+QString::number(nuevacancion.estrellas).toStdString()+"\nRating: "+ QString::number(ratin).toStdString()+"\nNumero de descargas: "+ QString::number(numerodescargas).toStdString()+ "\nDuracion: " +  QString::number(nuevacancion.duracion/3600).toStdString()+":"+QString::number(((nuevacancion.duracion%3600)/60)).toStdString()+":"+QString::number((nuevacancion.duracion%60)).toStdString()+ textoconcatenado;
+         }else{
+         return "Codigo: " + QString::number(nuevacancion.code).toStdString() + "\nCancion: " + nuevacancion.nombre.toStdString() + "\ncantante: " + nuevacancion.cantante.toStdString() + "\nGenero: " + nuevacancion.genero.toStdString() + "\nPrecio: " +QString::number(nuevacancion.precio).toStdString() + "\nreviews: "+QString::number(nuevacancion.reviews).toStdString()+ "\nEstrellas: "+QString::number(nuevacancion.estrellas).toStdString()+"\nRating: "+ QString::number(nuevacancion.estrellas).toStdString()+"\nNumero de descargas: "+ QString::number(numerodescargas).toStdString()+ "\nDuracion: " +  QString::number(nuevacancion.duracion/3600).toStdString()+":"+QString::number(((nuevacancion.duracion%3600)/60)).toStdString()+":"+QString::number((nuevacancion.duracion%60)).toStdString()+ textoconcatenado;
+         }
+         }
+         }
     return "no se encontro";
 }
-
+int ctunes::codigosave(){
+    return codigosaves;
+}
 
 void ctunes::reviewSong(int code, int stars){
     songsarchivo.seek(0);
     int reviewCont;
     while (!songsarchivo.atEnd()) {
         cancion nuevacancion;
-        insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas;
+        insongs >> nuevacancion.code >> nuevacancion.nombre >> nuevacancion.cantante >> nuevacancion.genero >> nuevacancion.precio >> nuevacancion.reviews >> nuevacancion.estrellas >> nuevacancion.duracion;
         reviewCont=nuevacancion.reviews+1;
         if (nuevacancion.code == code) {
             if(stars>=0 && stars<=5){
-            songsarchivo.seek(songsarchivo.pos()-8);
-            insongs << reviewCont << stars;
+            songsarchivo.seek(songsarchivo.pos()-12);
+                insongs << reviewCont << stars+nuevacancion.estrellas << nuevacancion.duracion;
+            break;
             }
         }
     }

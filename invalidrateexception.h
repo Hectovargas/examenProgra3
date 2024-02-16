@@ -23,7 +23,7 @@ private:
 
     QString errorMessage() const
     {
-        return QString("RATE is not a valid number for a review: %1").arg(m_rate);
+        return QString("rate is not a valid number for a review").arg(m_rate);
     }
 };
 

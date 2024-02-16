@@ -15,15 +15,17 @@ class ctunes
 public:
     ctunes();
     int getcodigo(long);
-    void addSong(string, string, GenerosMusicales::Genero ,double);
+    void addSong(string, string, GenerosMusicales::Genero ,double,int);
     void reviewSong(int, int);
     string downloadSong(int , string );
     QString songs(string);
     string infoSong(int);
+    int codigosave();
 
 private:
     int codecancion = 1;
     int codedownload = 1;
+    int codigosaves;
 };
 
 

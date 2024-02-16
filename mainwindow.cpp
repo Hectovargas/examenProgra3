@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <InvalidRateException.h>
+#include <QRegularExpression>
 
 using namespace std;
 
@@ -75,24 +76,26 @@ void MainWindow::on_pushButton_6_pressed()
 void MainWindow::on_pushButton_7_pressed()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    ui->textBrowser->setText("");
 }
 
 
 void MainWindow::on_pushButton_8_pressed()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    ui->textBrowser_2->setText("");
 }
 
 
 void MainWindow::on_pushButton_9_pressed()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    ui->textBrowser_3->setText("");
 }
 
 
 void MainWindow::on_addboton_clicked()
 {
- try{
     double precio;
     QString qname = ui->nombrefield->text().simplified();
     string name = qname.toStdString();
@@ -101,8 +104,12 @@ void MainWindow::on_addboton_clicked()
     QString qgenero = ui->generobox->currentText().simplified();
     string genero = qgenero.toStdString();
     QString qprecio = ui->preciofield->text().simplified();
-    precio = qprecio.toDouble();
+    int tiempo = (ui->hora->value()*3600)+(ui->minutos->value()*60)+(ui->segundos->value());
+    if(tiempo > 0){
+    bool isValidPrice = QRegularExpression("^[0-9]+([\\.,][0-9]+)?$").match(qprecio).hasMatch();
     GenerosMusicales::Genero gen;
+    if (isValidPrice){
+    precio = qprecio.toDouble();
     if(!qname.isEmpty() && !qcant.isEmpty() && !qgenero.isEmpty() && !qprecio.isEmpty()){
     if(genero=="DANCE"){gen=GenerosMusicales::GENERO_DANCE;}
     if(genero=="ELECTRONICA"){gen = GenerosMusicales::GENERO_ELECTRONICA;}
@@ -112,43 +119,84 @@ void MainWindow::on_addboton_clicked()
     if(genero=="REGGAE"){gen = GenerosMusicales::GENERO_REGGAE;}
     if(genero=="ROCK"){gen = GenerosMusicales::GENERO_ROCK;}
     ctunes object;
-    object.addSong(name,cantant,gen,precio);
+    object.addSong(name,cantant,gen,precio,tiempo);
+    ui->nombrefield->setText("");
+    ui->preciofield->setText("");
+    ui->cantantefield->setText("");
+    ui->etiquetaerror->setText("");
+    ui->textBrowser_4->setText("El codigo de tu cancion es: "+ QString::number(object.codigosave()));
     }else{
     ui->etiquetaerror->setText("tiene que llenar todos los campos");
     }
- }catch (const invalid_argument& e){
-     ui->etiquetaerror->setText("solo puede ingresar numeros en el apartado de precio");
- }
+    }else{
+    ui->etiquetaerror->setText("Solo puede ingresar numeros");
+    }
+    }else{
+    ui->etiquetaerror->setText("La cancion es demasiado corta");
+    }
 }
 
 
 void MainWindow::on_verboton_clicked()
 {
+QString scode;
 ctunes object;
-QString cadena = QString::fromStdString(object.infoSong(ui->codigoInfo->text().toInt()));
-ui->textEdit->setText(cadena);
+scode = ui->codigoInfo->text();
+bool isValidint = QRegularExpression("^[0-9]+$").match(scode).hasMatch();
+if(isValidint){
+int code = scode.toInt();
+QString cadena = QString::fromStdString(object.infoSong(code));
+ui->textBrowser_3->setText(cadena);
+ui->codigoInfo->setText("");
+ui->errorlabel->setText("");
+}else{
+ui->errorlabel->setText("solo puede ingresar un numero entero");
+}
 }
 
 
 void MainWindow::on_botonreview_clicked()
 {
-    int code = ui->codigoreview->text().toInt();
-    int estrellas = ui->estrellasfield->text().toInt();
+    QString scode = ui->codigoreview->text();
+    QString sstrellas = ui->estrellasfield->text();
+    bool isValidint = QRegularExpression("^[0-9]+$").match(scode).hasMatch();
+    bool isValidint2 = QRegularExpression("^[0-9]+$").match(sstrellas).hasMatch();
+    if(isValidint && isValidint2){
+        int code = scode.toInt();
+        int estrellas = sstrellas.toInt();
+        if(estrellas>=0 && estrellas<=5){
     ctunes object;
     try{
     object.reviewSong(code,estrellas);
+    ui->codigoreview->setText("");
+    ui->estrellasfield->setText("");
+    ui->label_18->setText("");
     }catch(const InvalidRateException &e){
+        qDebug() << "Error:" << e.what();
+        ui->label_18->setText(QString::number(estrellas)+e.what());
+    }
+        }else{
+        ui->label_18->setText("El numero de estrellas no es valido");
+        }
+    }else{
+        ui->label_18->setText("Solo puede poner numeros enteros");
     }
 }
 
 
 void MainWindow::on_descargarboton_clicked()
-{
-    int code = ui->codigoDescargar->text().toInt();
+{   QString scode = ui->codigoDescargar->text();
+    bool isValidint = QRegularExpression("^[0-9]+$").match(scode).hasMatch();
+    if(isValidint){
+    int code = scode.toInt();
     string cliente = ui->nombredownload->text().toStdString();
     ctunes object;
-    object.downloadSong(code,cliente);
+    ui->codigoDescargar->setText("");
+    ui->nombredownload->setText("");
     ui->textBrowser->setText(QString::fromStdString(object.downloadSong(code,cliente)));
+    }else{
+        ui->textBrowser->setText("Solo puede colocar numeros enteros");
+    }
 }
 
 
@@ -157,5 +205,13 @@ void MainWindow::on_creararchivosboton_clicked()
     string namefile = ui->nombrearchivo->text().toStdString();
     ctunes object;
     ui->textBrowser_2->setText(object.songs(namefile));
+    ui->nombrearchivo->setText("");
+
+}
+
+
+void MainWindow::on_pushButton_7_clicked()
+{
+
 }
 
